@@ -1,0 +1,63 @@
+version: "3.8"
+services:
+  postgres_service:
+    image: postgres
+    container_name: postgres_container
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: user_test
+      POSTGRES_PASSWORD: password_test
+      POSTGRES_DB: test_db
+
+  zookeeper_service:
+    image: bitnami/zookeeper:latest
+    container_name: zookeeper_container
+    restart: always
+    ports:
+      - "2181:2181"
+    environment:
+      - ALLOW_ANONYMOUS_LOGIN=yes
+
+  kafka_service:
+    image: bitnami/kafka:latest
+    container_name: kafka_container
+    restart: always
+    ports:
+      - '9092:9092'
+      - '9093:9093'
+    environment:
+      - KAFKA_BROKER_ID=1
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CLIENT:PLAINTEXT,EXTERNAL:PLAINTEXT
+      - KAFKA_CFG_LISTENERS=CLIENT://:9093,EXTERNAL://:9092
+      - KAFKA_CFG_ADVERTISED_LISTENERS=CLIENT://kafka_service:9093,EXTERNAL://kafka_service:9092
+      - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=CLIENT
+      - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper_service:2181
+      - ALLOW_PLAINTEXT_LISTENER=yes
+    depends_on:
+      - zookeeper_service
+
+  spring-boot-service:
+    container_name: spring-boot-orchestrator-app
+    image: spring-boot-api-orchestrator
+    build:
+      context: ./orchestrator/
+      dockerfile: Dockerfile
+    ports:
+      - 8081:8081
+    depends_on:
+      - kafka_service
+
+  nest-service:
+    container_name: nest-app
+    image: nest-api-user
+    build:
+      context: ./ms-products/consumer-ts/
+      dockerfile: Dockerfile
+    ports:
+      - 3000:3000
+    depends_on:
+      - postgres_service
+      - kafka_service
+      - spring-boot-service

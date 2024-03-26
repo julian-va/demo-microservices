@@ -1,0 +1,18 @@
+server:
+  port: 8081
+  servlet:
+    context-path: /api/orchestrator
+
+spring:
+  threads:
+    virtual:
+      enabled: true
+
+kafka:
+  topic: order-topic
+  topic_grouped_id: order-group
+  bootstrap_server_config: kafka_service:9092
+  retries_config: 5
+  topic_retry: order-topic-retry
+  topic_retry_grouped_id: order-group-retry
+  retries_config_topic: 5
