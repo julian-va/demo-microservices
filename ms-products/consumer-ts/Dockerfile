@@ -17,4 +17,4 @@ COPY . .
 RUN npm run build
 
 # Define the command to start your application in development mode
-ENTRYPOINT ["/bin/sh", "-c", "npm run start:dev"]
+ENTRYPOINT ["/bin/sh", "-c", "npm run start:prod"]

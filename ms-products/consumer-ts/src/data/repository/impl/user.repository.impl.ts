@@ -13,23 +13,52 @@ export class UserRepositoryImpl implements UserRepository {
   ) {}
 
   getAll(skip: number, take: number): Promise<UserEntity[]> {
-    return this.repository.find({ skip: skip, take: take });
+    try {
+      return this.repository.find({ skip: skip, take: take });
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   getById(id: number): Promise<UserEntity> {
-    return this.repository.findOneBy({ id: id });
+    try {
+      return this.repository.findOneBy({ id: id });
+    } catch (error) {
+      console.error(error);
+    }
   }
+
   create(dto: UserCreateDto): Promise<UserEntity> {
-    const newEntity = this.repository.create(dto);
-    return this.repository.save(newEntity);
+    try {
+      const newEntity = this.repository.create(dto);
+      return this.repository.save(newEntity);
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   async update(dto: UserUpdateDto): Promise<UserEntity> {
-    const entity = await this.getById(dto.id);
-    this.repository.merge(entity, dto);
-    return this.repository.save(entity);
+    if (!dto || !dto.id) {
+      return;
+    }
+    try {
+      const entity = await this.getById(dto.id);
+      if (entity) {
+        this.repository.merge(entity, dto);
+        return this.repository.save(entity);
+      }
+    } catch (error) {
+      console.error(error);
+    }
   }
+
   delete(id: number): void {
-    this.repository.delete(id);
+    try {
+      if (id) {
+        this.repository.delete(id);
+      }
+    } catch (error) {
+      console.error(error);
+    }
   }
 }
