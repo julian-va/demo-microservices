@@ -1,14 +1,14 @@
-export class UserBaseDto {
+export abstract class UserBaseDto {
   name: string;
   email: string;
   role: string;
-}
-
-export class UserCreateDto extends UserBaseDto {
   password: string;
 }
+
+export class UserCreateDto extends UserBaseDto {}
 
 export class UserUpdateDto extends UserBaseDto {
   id: number;
   creationDate: Date;
+  updateDate: Date;
 }

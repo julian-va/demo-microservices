@@ -12,5 +12,5 @@ export const PostgresDataSource: TypeOrmModuleOptions = {
   synchronize: true,
   retryDelay: 3000,
   retryAttempts: 10,
-  poolSize: 2,
+  poolSize: 10,
 };
