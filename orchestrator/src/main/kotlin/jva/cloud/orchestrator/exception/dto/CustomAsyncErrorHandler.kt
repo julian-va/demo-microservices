@@ -1,4 +1,4 @@
-package jva.cloud.orchestrator.data.dto
+package jva.cloud.orchestrator.exception.dto
 
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory

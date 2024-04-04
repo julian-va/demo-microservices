@@ -40,6 +40,7 @@ services:
 
   spring-boot-service:
     container_name: spring-boot-orchestrator-app
+    restart: always
     image: spring-boot-api-orchestrator
     build:
       context: ./orchestrator/
@@ -47,10 +48,12 @@ services:
     ports:
       - 8081:8081
     depends_on:
+      - postgres_service
       - kafka_service
 
   nest-service:
     container_name: nest-app
+    restart: always
     image: nest-api-user
     build:
       context: ./ms-products/consumer-ts/
